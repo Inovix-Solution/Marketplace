@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Découvrez Inovix Market, un projet de marketplace multi-vendeur développé en PHP et MySQL : catalogue, espaces dédiés et paiements Stripe Connect.">
+  <meta name="theme-color" content="#6446e8">
+  <title>Inovix Market — Présentation du projet</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%236446e8'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='Georgia,serif' font-weight='bold' font-size='46' fill='white'%3EI%3C/text%3E%3C/svg%3E">
+  <style>
+    :root { --ink:#202133; --muted:#606275; --purple:#6446e8; --purple-dark:#4e31c9; --lavender:#f2efff; --line:#e8e7ee; --white:#fff; --radius:22px; --width:1160px; }
+    *, *::before, *::after { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:24px; }
+    body { margin:0; color:var(--ink); background:var(--white); font-family:Inter,"Segoe UI",Arial,sans-serif; font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; cursor:pointer; }
+    a,button { -webkit-tap-highlight-color:transparent; }
+    a:focus-visible,button:focus-visible { outline:3px solid var(--purple); outline-offset:5px; }
+    ::selection { background:#ded6ff; }
+    svg { display:block; width:20px; height:20px; flex-shrink:0; }
+    .wrap { width:min(var(--width),calc(100% - 80px)); margin-inline:auto; }
+    .skip { position:absolute; left:20px; top:-90px; z-index:20; background:var(--ink); color:white; padding:12px 20px; border-radius:8px; }
+    .skip:focus { top:12px; }
+    .header { display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:100px; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:11px; font-size:20px; font-weight:750; letter-spacing:-.7px; white-space:nowrap; }
+    .brand-mark { display:grid; place-items:center; width:36px; height:36px; background:var(--purple); color:white; border-radius:11px; font:bold 28px Georgia,"Times New Roman",serif; letter-spacing:0; }
+    .nav { display:flex; align-items:center; gap:28px; font-size:14px; font-weight:550; }
+    .nav a:not(.button):hover,.footer a:hover { color:var(--purple); }
+    .button { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:46px; padding:11px 20px; background:var(--purple); color:white; border:1px solid var(--purple); border-radius:9px; font-size:14px; font-weight:650; line-height:1.3; transition:background .18s,transform .18s; }
+    .button:hover { background:var(--purple-dark); border-color:var(--purple-dark); transform:translateY(-2px); }
+    .button.secondary { background:white; color:var(--ink); border-color:var(--line); }
+    .button.secondary:hover { background:var(--lavender); border-color:#d9d0fb; }
+    .hero { display:grid; grid-template-columns:1.05fr 1fr; gap:60px; align-items:center; padding-block:78px 74px; }
+    h1,h2,h3,p { margin:0; }
+    h1 { font-size:clamp(44px,5vw,65px); font-weight:750; letter-spacing:-3.3px; line-height:1.1; max-width:600px; }
+    h1 span { color:var(--purple); }
+    .hero-copy { margin-top:25px; max-width:470px; color:var(--muted); font-size:17px; line-height:1.8; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+    .hero-note { display:flex; align-items:center; gap:9px; margin-top:24px; font-size:12px; color:var(--muted); }
+    .hero-note::before { content:""; display:block; width:6px; height:6px; background:var(--purple); border-radius:50%; }
+    .preview-area { background:var(--lavender); padding:30px 24px 21px; border-radius:var(--radius); position:relative; }
+    .preview { border:1px solid #e3dcfb; border-radius:13px; background:white; overflow:hidden; box-shadow:0 18px 36px -22px #46318055; }
+    .preview-chrome { display:flex; gap:5px; align-items:center; padding:14px 16px; border-bottom:1px solid var(--line); background:#fcfbff; }
+    .dot { width:6px; height:6px; border-radius:50%; background:#d7d2e4; }
+    .preview-address { flex:1; text-align:center; padding-right:26px; font-size:10px; color:#77738b; letter-spacing:.1px; }
+    .preview-head { display:flex; align-items:center; justify-content:space-between; padding:17px 20px; border-bottom:1px solid var(--line); }
+    .preview-brand { display:flex; gap:7px; align-items:center; font-size:12px; font-weight:750; letter-spacing:-.3px; }
+    .preview-brand .brand-mark { width:23px; height:23px; border-radius:7px; font-size:19px; }
+    .preview-role { font-size:10px; color:var(--purple); background:var(--lavender); padding:5px 9px; border-radius:5px; }
+    .preview-content { padding:22px 20px 20px; min-height:290px; }
+    .preview-content h3 { font-size:19px; letter-spacing:-.6px; line-height:1.4; }
+    .preview-desc { margin-top:5px; color:var(--muted); font-size:11px; }
+    .preview-list { margin-top:19px; }
+    .preview-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--line); font-size:11px; }
+    .preview-row:last-child { border-bottom:0; }
+    .row-main { display:flex; gap:12px; align-items:center; }
+    .row-symbol { display:grid; place-items:center; width:34px; height:34px; background:#f6f4fc; color:var(--purple); border-radius:9px; }
+    .row-symbol svg { width:17px; height:17px; }
+    .row-title { display:block; font-weight:650; }
+    .row-detail { display:block; color:var(--muted); font-size:10px; margin-top:1px; }
+    .row-status { color:#496556; font-size:10px; background:#eff6f1; border-radius:5px; padding:4px 7px; white-space:nowrap; }
+    .preview-caption { text-align:center; margin-top:15px; color:#74688e; font-size:11px; }
+    .tabs { display:flex; gap:6px; justify-content:center; margin-top:19px; }
+    .tab { background:transparent; border:1px solid transparent; color:#6e608a; padding:8px 12px; border-radius:7px; font-size:12px; font-weight:600; min-height:38px; }
+    .tab[aria-selected="true"] { background:white; border-color:#e6dffa; color:var(--purple); box-shadow:0 2px 4px #30224408; }
+    .tab:hover { color:var(--purple-dark); background:#ffffff80; }
+    [hidden] { display:none !important; }
+    .stack { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px; padding-block:25px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .stack-intro { color:var(--muted); font-size:12px; }
+    .stack-items { display:flex; align-items:center; gap:30px; flex-wrap:wrap; font-size:15px; font-weight:650; letter-spacing:-.3px; }
+    .stack-items span { display:flex; align-items:center; gap:7px; }
+    .stack-items small { color:var(--muted); font-weight:450; font-size:12px; }
+    .section { padding-block:90px; }
+    .section-title { font-size:clamp(30px,3.6vw,43px); font-weight:700; line-height:1.2; letter-spacing:-1.5px; }
+    .project { display:grid; grid-template-columns:1fr 1.2fr; gap:95px; }
+    .project-text { color:var(--muted); font-size:16px; }
+    .project-text p+p { margin-top:17px; }
+    .project-text strong { color:var(--ink); font-weight:600; }
+    .section-header { display:flex; align-items:end; justify-content:space-between; gap:35px; margin-bottom:38px; }
+    .section-header p { max-width:345px; color:var(--muted); font-size:14px; }
+    .features { padding-top:0; }
+    .feature-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:40px; }
+    .feature { border-top:2px solid #e4def7; padding-top:22px; }
+    .feature-number { font-size:12px; color:var(--purple); font-weight:650; }
+    .feature h3 { font-size:21px; letter-spacing:-.6px; margin-block:12px 10px; }
+    .feature p { font-size:14px; color:var(--muted); }
+    .feature ul { list-style:none; margin:18px 0 0; padding:0; display:grid; gap:9px; }
+    .feature li { font-size:13px; display:flex; gap:9px; align-items:baseline; }
+    .feature li::before { content:""; width:4px; height:4px; background:var(--purple); border-radius:50%; flex:0 0 4px; transform:translateY(-3px); }
+    .engineering { background:#242238; color:white; padding-block:70px; }
+    .engineering-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:100px; }
+    .engineering-intro p { color:#bdbacd; font-size:15px; margin-top:21px; }
+    .engineering .section-title { max-width:360px; }
+    .technical-list { margin:0; }
+    .technical-list>div { padding-block:18px; border-bottom:1px solid #ffffff18; display:grid; grid-template-columns:140px 1fr; gap:20px; }
+    .technical-list>div:first-child { padding-top:0; }
+    .technical-list>div:last-child { border:0; padding-bottom:0; }
+    .technical-list dt { font-size:14px; font-weight:600; color:#e6deff; }
+    .technical-list dd { margin:0; font-size:13px; color:#bdbacd; }
+    .closing { display:flex; align-items:center; justify-content:space-between; gap:32px; padding-block:65px; }
+    .closing h2 { font-size:30px; letter-spacing:-1px; line-height:1.3; }
+    .closing p { color:var(--muted); font-size:14px; margin-top:8px; }
+    .footer { border-top:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:20px; padding-block:25px 30px; font-size:12px; color:var(--muted); }
+    .footer strong { font-weight:650; color:var(--ink); }
+    @media (max-width:1000px) {
+      .hero { gap:30px; } h1 { font-size:53px; letter-spacing:-2.5px; }
+      .nav { gap:19px; } .project,.engineering-grid { gap:45px; }
+      .technical-list>div { grid-template-columns:115px 1fr; }
+      .stack-items { gap:19px; }
+    }
+    @media (max-width:760px) {
+      .wrap { width:calc(100% - 40px); } .header { min-height:82px; gap:16px; }
+      .brand { font-size:18px; } .brand-mark { width:32px; height:32px; font-size:25px; }
+      .nav>a:not(.button) { display:none; } .nav .button { padding:10px 13px; font-size:12px; min-height:40px; }
+      .nav .button svg { width:16px; height:16px; }
+      .hero { grid-template-columns:1fr; gap:40px; padding-block:48px; }
+      h1 { font-size:clamp(40px,8vw,58px); letter-spacing:-2px; }
+      .hero-copy { margin-top:20px; font-size:16px; max-width:530px; }
+      .hero-note { margin-top:20px; } .preview-area { max-width:530px; width:100%; justify-self:center; padding:24px 20px 18px; }
+      .stack { justify-content:start; gap:12px; padding-block:20px; } .stack-items { gap:12px 21px; font-size:14px; }
+      .section { padding-block:56px; } .project,.engineering-grid { grid-template-columns:1fr; gap:25px; }
+      .section-header { display:block; margin-bottom:29px; } .section-header p { margin-top:14px; max-width:500px; }
+      .features { padding-top:0; } .feature-list { grid-template-columns:1fr; gap:30px; } .feature { padding-top:18px; }
+      .feature h3 { margin-block:8px; } .feature ul { gap:7px; margin-top:13px; }
+      .engineering { padding-block:48px; } .engineering .section-title { max-width:500px; }
+      .technical-list>div { grid-template-columns:110px 1fr; gap:15px; }
+      .closing { flex-direction:column; align-items:start; padding-block:45px; gap:24px; }
+      .footer { align-items:start; flex-direction:column; gap:8px; padding-block:20px; }
+    }
+    @media (max-width:360px) {
+      .wrap { width:calc(100% - 28px); } .brand { font-size:16px; gap:7px; } .nav .button { padding:9px; }
+      .nav .button svg { display:none; } .preview-area { padding-inline:12px; } .tab { padding-inline:9px; }
+      .technical-list>div { grid-template-columns:1fr; gap:5px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition:none !important; } }
+  </style>
+</head>
+<body id="haut">
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="bag" viewBox="0 0 24 24"><path d="M5 8h14l1 12H4L5 8Zm4 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="box" viewBox="0 0 24 24"><path d="m12 3 9 5v9l-9 5-9-5V8l9-5Zm0 10 9-5M3 8l9 5v9M7.5 5.5l9 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+  <header class="header wrap">
+    <a class="brand" href="#haut" aria-label="Inovix Market, début de la présentation"><span class="brand-mark" aria-hidden="true">I</span>Inovix Market</a>
+    <nav class="nav" aria-label="Navigation de la présentation">
+      <a href="#projet">Le projet</a><a href="#fonctionnalites">Fonctionnalités</a><a href="#technique">Technique</a>
+      <a class="button" href="https://recommender-media.com/" target="_blank" rel="noopener noreferrer" aria-label="Voir le site Inovix Market dans un nouvel onglet">Voir le site <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+    </nav>
+  </header>
+  <main id="contenu">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div>
+        <h1 id="hero-title">Le commerce,<br>pensé pour<br><span>plusieurs vendeurs.</span></h1>
+        <p class="hero-copy">Inovix Market réunit un catalogue partagé, des boutiques indépendantes et des paiements répartis entre vendeurs. Une marketplace conçue du parcours d’achat jusqu’à l’administration.</p>
+        <div class="actions">
+          <a class="button" href="#projet">Découvrir le projet <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+          <a class="button secondary" href="#fonctionnalites">Explorer les fonctionnalités</a>
+        </div>
+        <p class="hero-note">Un projet web complet, développé en PHP et MySQL.</p>
+      </div>
+      <div class="preview-area">
+        <div class="preview" aria-label="Aperçu illustratif des espaces du projet">
+          <div class="preview-chrome" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-address">Inovix Market / espaces dédiés</span></div>
+          <div class="preview-head"><span class="preview-brand"><span class="brand-mark" aria-hidden="true">I</span>Inovix Market</span><span class="preview-role" id="preview-role">Client</span></div>
+          <div class="preview-content">
+            <div id="panel-client" role="tabpanel" aria-labelledby="tab-client">
+              <h3>Tout commence par une découverte.</h3><p class="preview-desc">Un parcours d’achat, plusieurs boutiques.</p>
+              <div class="preview-list">
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#bag"/></svg></span><div><span class="row-title">Explorer le catalogue</span><span class="row-detail">Recherche, catégories et filtres</span></div></div><span class="row-status">Découvrir</span></div>
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#box"/></svg></span><div><span class="row-title">Réunir ses articles</span><span class="row-detail">Un panier commun à plusieurs vendeurs</span></div></div></div>
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#check"/></svg></span><div><span class="row-title">Payer et suivre sa commande</span><span class="row-detail">Stripe Checkout et suivi des expéditions</span></div></div></div>
+              </div>
+            </div>
+            <div id="panel-vendeur" role="tabpanel" aria-labelledby="tab-vendeur" hidden>
+              <h3>Une boutique, un espace à soi.</h3><p class="preview-desc">Les outils utiles pour gérer son activité.</p>
+              <div class="preview-list">
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#bag"/></svg></span><div><span class="row-title">Mes produits</span><span class="row-detail">Images, variantes, prix et stocks</span></div></div><span class="row-status">Gérer</span></div>
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#box"/></svg></span><div><span class="row-title">Mes commandes</span><span class="row-detail">Préparation et expédition des articles</span></div></div></div>
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#check"/></svg></span><div><span class="row-title">Mes paiements</span><span class="row-detail">Configuration Stripe et suivi des transferts</span></div></div></div>
+              </div>
+            </div>
+            <div id="panel-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
+              <h3>Une vue d’ensemble, sans détour.</h3><p class="preview-desc">Piloter et organiser la marketplace.</p>
+              <div class="preview-list">
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#bag"/></svg></span><div><span class="row-title">Utilisateurs et vendeurs</span><span class="row-detail">Comptes, rôles et accès à la plateforme</span></div></div><span class="row-status">Piloter</span></div>
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#box"/></svg></span><div><span class="row-title">Catalogue et commandes</span><span class="row-detail">Catégories, suivi et organisation</span></div></div></div>
+                <div class="preview-row"><div class="row-main"><span class="row-symbol"><svg aria-hidden="true"><use href="#check"/></svg></span><div><span class="row-title">Réglages et versements</span><span class="row-detail">Paramètres du site et suivi des transferts</span></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Choisir un aperçu de rôle">
+          <button class="tab" id="tab-client" type="button" role="tab" aria-controls="panel-client" aria-selected="true" tabindex="0" data-label="Client">Client</button>
+          <button class="tab" id="tab-vendeur" type="button" role="tab" aria-controls="panel-vendeur" aria-selected="false" tabindex="-1" data-label="Vendeur">Vendeur</button>
+          <button class="tab" id="tab-admin" type="button" role="tab" aria-controls="panel-admin" aria-selected="false" tabindex="-1" data-label="Administrateur">Administrateur</button>
+        </div>
+        <p class="preview-caption">Aperçu interactif illustratif · aucune donnée réelle</p>
+        <noscript><p class="preview-caption">Activez JavaScript pour explorer les autres rôles.</p></noscript>
+      </div>
+    </section>
+    <div class="stack wrap" aria-label="Technologies utilisées">
+      <span class="stack-intro">Une base technique volontairement légère</span>
+      <div class="stack-items"><span>PHP <small>8.1+</small></span><span>MySQL</span><span>HTML &amp; CSS</span><span>JavaScript</span><span>Stripe Connect</span></div>
+    </div>
+    <section class="project section wrap" id="projet" aria-labelledby="project-title">
+      <h2 class="section-title" id="project-title">Un site marchand.<br>Trois points de vue.</h2>
+      <div class="project-text">
+        <p>L’objectif : réunir plusieurs vendeurs dans une même expérience d’achat, tout en donnant à chacun les outils pour gérer ses produits, ses commandes et ses paiements.</p>
+        <p>Le projet couvre l’ensemble du parcours : <strong>découvrir, acheter, vendre et administrer</strong>. Il associe une interface responsive à une logique métier côté serveur, avec une attention particulière portée aux stocks et à la répartition des paiements.</p>
+      </div>
+    </section>
+    <section class="features section wrap" id="fonctionnalites" aria-labelledby="features-title">
+      <div class="section-header"><h2 class="section-title" id="features-title">À chacun son espace.</h2><p>Des parcours distincts, reliés par un catalogue et des commandes partagés.</p></div>
+      <div class="feature-list">
+        <article class="feature"><span class="feature-number" aria-hidden="true">01 / ACHETER</span><h3>Côté client</h3><p>Découvrir les articles, composer un panier et retrouver toutes ses commandes au même endroit.</p><ul><li>Recherche, filtres et favoris</li><li>Panier multi-vendeur et codes promotionnels</li><li>Paiement hébergé par Stripe</li><li>Adresses et suivi des commandes</li></ul></article>
+        <article class="feature"><span class="feature-number" aria-hidden="true">02 / VENDRE</span><h3>Côté vendeur</h3><p>Gérer son catalogue et préparer ses commandes depuis un espace dédié à sa boutique.</p><ul><li>Produits, variantes et plusieurs images</li><li>Gestion des prix et des stocks</li><li>Suivi et expédition de ses articles</li><li>Configuration et transferts Stripe Connect</li></ul></article>
+        <article class="feature"><span class="feature-number" aria-hidden="true">03 / ORGANISER</span><h3>Côté administrateur</h3><p>Organiser la plateforme et garder la main sur les comptes, le catalogue et les réglages.</p><ul><li>Gestion des clients et des vendeurs</li><li>Catégories, commandes et promotions</li><li>Pages de contenu et paramètres du site</li><li>Suivi des versements aux vendeurs</li></ul></article>
+      </div>
+    </section>
+    <section class="engineering" id="technique" aria-labelledby="engineering-title">
+      <div class="engineering-grid wrap">
+        <div class="engineering-intro"><h2 class="section-title" id="engineering-title">Simple à héberger.<br>Rigoureux à construire.</h2><p>Une application PHP/MySQL sans framework, pensée pour un hébergement mutualisé. La complexité reste dans les règles métier, pas dans l’infrastructure.</p></div>
+        <dl class="technical-list">
+          <div><dt>Architecture</dt><dd>Rendu HTML côté serveur, services métier séparés et accès MySQL via PDO.</dd></div>
+          <div><dt>Paiements</dt><dd>Stripe Checkout et Connect : paiement commun, puis répartition des montants et des frais entre vendeurs.</dd></div>
+          <div><dt>Fiabilité</dt><dd>Confirmation par webhook signé, traitement idempotent et reprise des transferts en attente.</dd></div>
+          <div><dt>Protection</dt><dd>Requêtes préparées, contrôle des rôles, protection CSRF et validation des fichiers téléversés.</dd></div>
+          <div><dt>Exploitation</dt><dd>E-mails transactionnels, scripts de maintenance, migrations SQL et tests automatisés.</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="closing wrap" aria-labelledby="closing-title">
+      <div><h2 id="closing-title">Découvrir le projet en situation.</h2><p>Cette présentation est indépendante de l’application et de ses données.</p></div>
+      <a class="button" href="https://recommender-media.com/" target="_blank" rel="noopener noreferrer" aria-label="Visiter Inovix Market dans un nouvel onglet">Visiter Inovix Market <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+    </section>
+  </main>
+  <footer class="footer wrap"><p><strong>Inovix Market</strong> · Un projet Inovix Solutions</p><p>Présentation de portfolio <span aria-hidden="true">/</span> <a href="#haut">Retour en haut</a></p></footer>
+  <script>
+    (() => {
+      const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+      const roleLabel = document.getElementById('preview-role');
+      function selectTab(tab, focus = false) {
+        tabs.forEach(item => {
+          const selected = item === tab;
+          item.setAttribute('aria-selected', String(selected));
+          item.tabIndex = selected ? 0 : -1;
+          document.getElementById(item.getAttribute('aria-controls')).hidden = !selected;
+        });
+        roleLabel.textContent = tab.dataset.label;
+        if (focus) tab.focus();
+      }
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => selectTab(tab));
+        tab.addEventListener('keydown', event => {
+          let next;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+          if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === 'Home') next = 0;
+          if (event.key === 'End') next = tabs.length - 1;
+          if (next !== undefined) { event.preventDefault(); selectTab(tabs[next], true); }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
